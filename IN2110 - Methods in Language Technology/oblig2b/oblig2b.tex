@@ -1,0 +1,147 @@
+\documentclass{article}
+
+\usepackage{outlines}
+\usepackage{enumitem}
+\setenumerate[1]{label=\arabic*.}
+\setenumerate[2]{label=\arabic*)}
+
+\renewcommand{\thesection}{\alph{section})}
+
+\author{Stian Carlsen Swärd (stiancsw)}
+\title{IN2110 - Oblig2b}
+
+\begin{document}
+\maketitle
+
+\section*{Del 1: Maskinoversettelse}
+\section{Utvikling av en frasetabell}
+\subsection*{Oppgaver:}
+\begin{outline}[enumerate]
+\1 Hva er modellens oversettelse for linjene 10-15?
+\begin{verbatim}
+because these rings bargen the force and the will to lead every people .
+but they all cheated .
+because a ring was made .
+in mordor , in the flash-over of the schicksalsberges forging of the dark lord sauron , the dark lord sauron be secretive a meisterring to mastery everyone else .
+in this ring , his cruelty , his cattiness and his will , went to burdensome all life .
+a ring to enslaving them .
+\end{verbatim}
+
+\1 Finn et eksempel hvor bruk av ordboken førte til en dårlig oversettelse.
+Oversettelsen for linje 3 skulle vært \verb|''i feel it in the earth .''| men er i stedet \verb|''i feel it in the world .''|
+
+\1 Lag en liste med minst 10 ord som systematisk er feil oversatt.
+    \2 \begin{verbatim}beutlin|||baggins\end{verbatim}
+    \2 \begin{verbatim}elben|||elves\end{verbatim}
+    \2 \begin{verbatim}langerwartete|||long awaited\end{verbatim}
+    \2 \begin{verbatim}namenloses|||nameless\end{verbatim}
+    \2 \begin{verbatim}nebelgebirge|||misty mountains\end{verbatim}
+    \2 \begin{verbatim}reinsten|||fairest\end{verbatim}
+    \2 \begin{verbatim}schicksalsberges|||mount doom\end{verbatim}
+    \2 \begin{verbatim}unwahrscheinlichsten|||most unlikely\end{verbatim}
+    \2 \begin{verbatim}vergiftete|||poisoned\end{verbatim}
+    \2 \begin{verbatim}weisesten|||wisest\end{verbatim}
+\end{outline}
+
+\section{Evaluering}
+\subsection*{Oppgaver:}
+\begin{outline}[enumerate]
+\1 Fyll ut \verb|compute_precision(ref_file, output_file, ngram_order)|:
+\begin{verbatim}
+ref_sentences = get_sentences(reference_file)
+output_sentences = get_sentences(output_file)
+    
+total_ngrams = 0
+matching_ngrams = 0
+
+for ref, mtl in zip(ref_sentences, output_sentences):
+    ref_ngrams = [ref[n:n+ngram_order] for n in range(len(ref) - ngram_order + 1)]
+    for n in range(len(mtl) - ngram_order + 1):
+        if mtl[n:n+ngram_order] in ref_ngrams:
+            matching_ngrams += 1
+        total_ngrams += 1
+
+return matching_ngrams / total_ngrams
+\end{verbatim}
+
+\1 Fyll ut \verb|compute_brevity_penalty(ref_file, output_file)|:
+\begin{verbatim}
+ref_sentences = get_sentences(reference_file)
+output_sentences = get_sentences(output_file)
+
+ref_words = 0
+mtl_words = 0
+
+for ref, mtl in zip(ref_sentences, output_sentences):
+    ref_words += len(ref)
+    mtl_words += len(mtl)
+
+return min(1, mtl_words / ref_words)
+\end{verbatim}
+
+\1 og 4.:\newline
+BLEU-score for maskinoversettelse av \verb|lotr.de| med og uten frasetabellen \verb|de-en.txt|:\newline\newline
+\begin{tabular}{ | c | c | }
+    \hline
+    Frasetabell? & BLEU-score \\
+    \hline
+    NEI & 0.232 \\
+    \hline
+    JA & 0.236 \\
+    \hline
+\end{tabular}
+\end{outline}
+\newpage
+
+\section*{Del 2: Interaktive systemer}
+\subsection*{Oppgaver}
+\begin{outline}[enumerate]
+\1 Fyll ut \verb|get_tf_idf(self, utterance)|:
+\begin{verbatim}
+vector = {}
+for word in set(utterance):
+    tf = utterance.count(word) / len(utterance)
+    df = 0
+    idf = np.log(len(self.utterances) / self.doc_freqs[word])
+    vector[word] = tf * idf
+
+return vector
+\end{verbatim}
+
+\1 Fyll ut \verb|compute_cosine(self, tf_idf1, tf_idf2)|:
+\begin{verbatim}
+# Create a 'corpus' of all the words in tf_idf1 and tf_idf2
+common_words = set(tf_idf1.keys())
+common_words.update(set(tf_idf2.keys()))
+
+# Create numpy arrays of shape (1, len(common_words)) 
+# and fill with values
+tf_idf1_vec = np.array([tf_idf1.get(word, 0) for word in common_words])
+tf_idf2_vec = np.array([tf_idf2.get(word, 0) for word in common_words])
+
+# Standard cosine similarity using numpy dot product
+return tf_idf1_vec @ tf_idf2_vec / (self._get_norm(tf_idf1) * self._get_norm(tf_idf2))
+\end{verbatim}
+
+\1 Fyll ut \verb|get_response(self, query)|:
+\begin{verbatim}
+# If the query is a string, we first tokenise it
+if type(query)==str:
+    query = self._tokenise(query)
+
+# Convert query to tf_idf vector
+query = self.get_tf_idf(query)
+
+# Compare query vector to corpus, keeping best match
+best_cosine_similarity = 0
+best_index = 0
+for n in range(len(self.tf_idfs) - 1):
+    cosine_similarity = self.compute_cosine(query, self.tf_idfs[n])
+    if cosine_similarity > best_cosine_similarity:
+        best_cosine_similarity = cosine_similarity
+        best_index = n
+
+return ' '.join(self.utterances[best_index + 1])
+\end{verbatim}
+\end{outline}
+\end{document}

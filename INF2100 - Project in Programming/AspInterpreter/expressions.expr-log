@@ -1,0 +1,68 @@
+PP> "Testing integer expressions:" ==>
+Trace line 1: 'Testing integer expressions:'
+PP> 42 ==>
+Trace line 2: 42
+PP> - 1017 ==>
+Trace line 3: -1017
+PP> - 2 + 5 * 7 ==>
+Trace line 4: 33
+PP> 100 % (- 2 % (+ 2 * 5) + 18) ==>
+Trace line 5: 22
+PP> 1234567890 // 1000000 ==>
+Trace line 6: 1234
+PP> "Testing float expressions:" ==>
+Trace line 8: 'Testing float expressions:'
+PP> 42.000000 ==>
+Trace line 9: 42.0
+PP> - 1017.100000 ==>
+Trace line 10: -1017.1
+PP> - 2 + 5.000000 * 7 ==>
+Trace line 11: 33.0
+PP> 100 % (- 2 % (+ 2 * 5.000000) + 18) ==>
+Trace line 12: 22.0
+PP> 1234567890.000000 // 1000000.000000 ==>
+Trace line 13: 1234.0
+PP> "Testing string expressions" ==>
+Trace line 15: 'Testing string expressions'
+PP> "Abc" ==>
+Trace line 16: 'Abc'
+PP> "x" * 10 ==>
+Trace line 17: 'xxxxxxxxxx'
+PP> "α" + "-" * 5 + "ω" ==>
+Trace line 18: 'α-----ω'
+PP> "Testing boolean expressions" ==>
+Trace line 20: 'Testing boolean expressions'
+PP> not False ==>
+Trace line 21: True
+PP> "To be" or "not to be" ==>
+Trace line 22: 'To be'
+PP> "Yes" and 3.140000 ==>
+Trace line 23: 3.14
+PP> False or True or 144 or "?" ==>
+Trace line 24: True
+PP> "Testing comparisons" ==>
+Trace line 26: 'Testing comparisons'
+PP> 1 <= 2 <= 3 ==>
+Trace line 27: True
+PP> "a" != "b" > "b" != 99 ==>
+Trace line 28: False
+PP> 3.140000 > 2.718282 > 0 ==>
+Trace line 29: True
+PP> "Testing lists" ==>
+Trace line 31: 'Testing lists'
+PP> [] ==>
+Trace line 32: []
+PP> [22, "w", [- 1, + 1], 3.141593] ==>
+Trace line 33: [22, 'w', [-1, 1], 3.14159265]
+PP> [101, 102, 103][1] ==>
+Trace line 34: 102
+PP> [- 1, 0, 1] * (2) ==>
+Trace line 35: [-1, 0, 1, -1, 0, 1]
+PP> "Abcdef"[0] ==>
+Trace line 36: 'A'
+PP> "Testing dictionaries" ==>
+Trace line 38: 'Testing dictionaries'
+PP> {"A":"a", "B":1 + 2} ==>
+Trace line 39: {'A': 'a', 'B': 3}
+PP> {"Ja":1, "Nei":0}["Ja"] ==>
+Trace line 40: 1
